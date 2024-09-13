@@ -11,14 +11,17 @@ class ImageCaptionTool(BaseTool):
         try:
             with open(img_path, 'rb') as image_file:
                 api_url = "https://copilot5.p.rapidapi.com/copilot"
-                api_key = "25c40aa56fmsh12b48be18760bb1p11101ejsn4236cc697a09"
+                api_key = "93cbb16e85mshd7eae7b8414948dp11ff2cjsne8b79ba01cb3"  # Updated API key
+
+                # Optional: If you need to upload the image somewhere to get a URL, do that here.
+                # Otherwise, if the API directly accepts image bytes, adjust accordingly.
 
                 payload = {
                     "message": "Describe this image",
                     "conversation_id": None,
                     "tone": "BALANCED",
                     "markdown": False,
-                    "photo_url": None
+                    "photo_url": None  # If the image needs to be a URL, update this field
                 }
                 headers = {
                     "Content-Type": "application/json",
@@ -29,7 +32,7 @@ class ImageCaptionTool(BaseTool):
                 response = requests.post(api_url, headers=headers, data=json.dumps(payload))
                 
                 if response.status_code == 200:
-                    caption = response.json().get("caption", "No caption returned")
+                    caption = response.json().get("data", {}).get("message", "No caption returned")  # Adjust to extract the 'message'
                 else:
                     caption = f"Error: {response.status_code} - {response.text}"
 
@@ -52,14 +55,16 @@ class ObjectDetectionTool(BaseTool):
         try:
             with open(img_path, 'rb') as image_file:
                 api_url = "https://copilot5.p.rapidapi.com/copilot"
-                api_key = "25c40aa56fmsh12b48be18760bb1p11101ejsn4236cc697a09"
+                api_key = "93cbb16e85mshd7eae7b8414948dp11ff2cjsne8b79ba01cb3"  # Updated API key
+
+                # Optional: Same as above, if you need to process the image into a URL or another format.
 
                 payload = {
                     "message": "Detect objects in this image",
                     "conversation_id": None,
                     "tone": "BALANCED",
                     "markdown": False,
-                    "photo_url": None
+                    "photo_url": None  # Update this if you need a URL
                 }
                 headers = {
                     "Content-Type": "application/json",
@@ -70,7 +75,7 @@ class ObjectDetectionTool(BaseTool):
                 response = requests.post(api_url, headers=headers, data=json.dumps(payload))
 
                 if response.status_code == 200:
-                    detections = response.json().get("detections", "No detections returned")
+                    detections = response.json().get("data", {}).get("message", "No detections returned")  # Adjust based on response format
                 else:
                     detections = f"Error: {response.status_code} - {response.text}"
 
